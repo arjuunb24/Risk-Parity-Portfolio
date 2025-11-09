@@ -1,0 +1,28 @@
+# Core numerical computing
+numpy
+pandas
+
+# Data acquisition
+yfinance
+
+# Optimization
+scipy
+cvxpy
+pypfopt
+
+# Visualization
+matplotlib
+seaborn
+plotly
+
+# Performance analytics
+quantstats
+pyfolio-reloaded
+
+# Utilities
+tqdm
+scikit-learn
+
+# Optional: Enhanced analysis
+statsmodels
+arch
