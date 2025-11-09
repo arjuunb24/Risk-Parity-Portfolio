@@ -8,7 +8,6 @@ yfinance
 # Optimization
 scipy
 cvxpy
-pypfopt
 
 # Visualization
 matplotlib
