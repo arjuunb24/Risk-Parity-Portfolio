@@ -6,17 +6,17 @@ This project implements a Risk Parity Portfolio model using Python to achieve ba
 
 ### Step 1: 
 
-'''bash
+```bash
 pip install -r requirements.txt
-'''
+```
 
 ### Step 2:
 
-'''bash
+```bash
 pip install git+https://github.com/robertmartin8/PyPortfolioOpt.git
-'''
+```
 
 ### Step 3:
-'''bash
+```bash
 python main.py
-'''
+```
