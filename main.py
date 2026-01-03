@@ -21,7 +21,7 @@ from backtesting.rebalancer import DynamicRebalancer
 from performance.metrics import PerformanceMetrics
 from performance.geographic_analysis import GeographicAnalyzer
 from visualization.plots import PortfolioVisualizer
-
+import webbrowser
 
 def main():
     """Main execution function"""
@@ -308,6 +308,7 @@ def main():
             rp_results['weights_history'],
             risk_decomp
         )
+        webbrowser.open('file://' + os.path.realpath(f'{OUTPUT_DIR}interactive_dashboard.html'))
     
     # ========================================================================
     # STEP 10: QUANTSTATS REPORT (Optional)
@@ -330,6 +331,7 @@ def main():
             title='Risk Parity Portfolio'
         )
         print(f"Report saved to {OUTPUT_DIR}quantstats_report.html")
+        webbrowser.open('file://' + os.path.realpath(f'{OUTPUT_DIR}quantstats_report.html'))
         
     except ImportError:
         print("\nQuantStats not installed. Skipping detailed report generation.")
