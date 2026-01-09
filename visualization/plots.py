@@ -444,6 +444,5 @@ class PortfolioVisualizer:
         if self.save_plots:
             fig.write_html(f'{self.output_dir}interactive_dashboard.html')
         
-        fig.show()
         
         return fig
