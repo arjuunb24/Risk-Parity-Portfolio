@@ -64,10 +64,17 @@ class PortfolioVisualizer:
         
         for name, results in strategies_results.items():
             portfolio_values = results['portfolio_values']
-            cumulative_returns = portfolio_values['cumulative_return'] * 100
+            
+            # Check if cumulative_return column exists, if not calculate it
+            if 'cumulative_return' in portfolio_values.columns:
+                cumulative_returns = portfolio_values['cumulative_return'] * 100
+            else:
+                # Calculate cumulative return from portfolio values
+                initial_value = portfolio_values['value'].iloc[0]
+                cumulative_returns = (portfolio_values['value'] / initial_value - 1) * 100
             
             ax.plot(cumulative_returns.index, cumulative_returns, 
-                   label=name, linewidth=2)
+                label=name, linewidth=2)
         
         ax.set_title(title, fontsize=16, fontweight='bold')
         ax.set_xlabel('Date', fontsize=12)
@@ -136,7 +143,13 @@ class PortfolioVisualizer:
         fig, ax = plt.subplots(figsize=(14, 8))
         
         for name, results in strategies_results.items():
-            returns = results['portfolio_returns']['return']
+            portfolio_returns = results['portfolio_returns']
+            
+            # Skip if empty or missing 'return' column
+            if portfolio_returns.empty or 'return' not in portfolio_returns.columns:
+                continue
+            
+            returns = portfolio_returns['return']
             rolling_vol = returns.rolling(window=window).std() * np.sqrt(252) * 100
             
             ax.plot(rolling_vol.index, rolling_vol, label=name, linewidth=2, alpha=0.7)
@@ -347,7 +360,14 @@ class PortfolioVisualizer:
         # 1. Cumulative Returns
         for i, (name, results) in enumerate(strategies_results.items()):
             portfolio_values = results['portfolio_values']
-            cumulative_returns = portfolio_values['cumulative_return'] * 100
+            
+            # Check if cumulative_return column exists, if not calculate it
+            if 'cumulative_return' in portfolio_values.columns:
+                cumulative_returns = portfolio_values['cumulative_return'] * 100
+            else:
+                # Calculate cumulative return from portfolio values
+                initial_value = portfolio_values['value'].iloc[0]
+                cumulative_returns = (portfolio_values['value'] / initial_value - 1) * 100
             
             fig.add_trace(
                 go.Scatter(x=cumulative_returns.index, y=cumulative_returns,
