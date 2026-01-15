@@ -226,6 +226,24 @@ class PerformanceMetrics:
         """
         Generate comprehensive performance report
         """
+        if portfolio_returns.empty or 'return' not in portfolio_returns.columns:
+            # Return empty report with NaN values
+            report = {
+                'Total Return': np.nan,
+                'Annualized Return': np.nan,
+                'Volatility (Annual)': np.nan,
+                'Sharpe Ratio': np.nan,
+                'Sortino Ratio': np.nan,
+                'Max Drawdown': np.nan,
+                'Calmar Ratio': np.nan,
+                'Win Rate': np.nan,
+                'VaR (95%)': np.nan,
+                'CVaR (95%)': np.nan,
+                'Best Day': np.nan,
+                'Worst Day': np.nan
+            }
+            return pd.DataFrame(report, index=['Value']).T
+        
         returns = portfolio_returns['return']
         
         # Calculate all metrics
