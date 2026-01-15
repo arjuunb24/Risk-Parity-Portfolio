@@ -154,8 +154,14 @@ class BacktestEngine:
             })
         
         # Convert to DataFrames
-        self.portfolio_values = pd.DataFrame(portfolio_values).set_index('date')
-        self.portfolio_returns = pd.DataFrame(portfolio_returns).set_index('date')
+        if len(portfolio_values) > 0:
+            self.portfolio_values = pd.DataFrame(portfolio_values).set_index('date')
+        else:
+            self.portfolio_values = pd.DataFrame(columns=['date', 'value']).set_index('date')
+        if len(portfolio_returns) > 0:
+            self.portfolio_returns = pd.DataFrame(portfolio_returns).set_index('date')
+        else:
+            self.portfolio_returns = pd.DataFrame()
         self.portfolio_weights_history = pd.DataFrame(weights_history)
         self.transaction_costs = pd.DataFrame(transaction_costs_history)
         
@@ -178,8 +184,8 @@ class BacktestEngine:
         return results
     
     def run_benchmark_backtest(self, 
-                               benchmark_weights: pd.Series,
-                               rebalance_freq: str = 'Q') -> Dict:
+                           benchmark_weights: pd.Series,
+                           rebalance_freq: str = 'Q') -> Dict:
         """
         Run backtest for benchmark portfolio (e.g., equal-weight)
         
@@ -190,6 +196,44 @@ class BacktestEngine:
         rebalance_freq : str
             Rebalancing frequency ('M', 'Q', 'Y')
         """
+        # Check if this is a single-asset benchmark (like SPY)
+        non_zero_weights = benchmark_weights[benchmark_weights > 0]
+        if len(non_zero_weights) == 1:
+            # Single asset benchmark - use simple buy and hold
+            ticker = non_zero_weights.index[0]
+            asset_returns = self.returns[ticker]
+            
+            portfolio_values = []
+            portfolio_returns = []
+            value = self.initial_capital
+            
+            for i, date in enumerate(asset_returns.index):
+                if i > 0:
+                    daily_return = asset_returns.iloc[i]
+                    value = value * (1 + daily_return)
+                    portfolio_returns.append({
+                        'date': date,
+                        'return': daily_return,
+                        'portfolio_value': value
+                    })
+                
+                portfolio_values.append({
+                    'date': date,
+                    'value': value
+                })
+            
+            results = {
+                'portfolio_values': pd.DataFrame(portfolio_values).set_index('date'),
+                'portfolio_returns': pd.DataFrame(portfolio_returns).set_index('date'),
+                'weights_history': pd.DataFrame(),
+                'transaction_costs': pd.DataFrame(),
+                'final_value': value,
+                'total_return': (value / self.initial_capital) - 1,
+                'total_transaction_costs': 0.0
+            }
+            
+            return results
+        
         # Generate rebalance dates
         rebalance_dates = self._generate_rebalance_dates(rebalance_freq)
         
@@ -244,6 +288,19 @@ class BacktestEngine:
             portfolio_values = results['portfolio_values']
             portfolio_returns = results['portfolio_returns']
             
+            if portfolio_returns.empty or len(portfolio_returns) == 0:
+                comparison.append({
+                    'Strategy': name,
+                    'Total Return': np.nan,
+                    'Annual Return': np.nan,
+                    'Volatility': np.nan,
+                    'Sharpe Ratio': np.nan,
+                    'Max Drawdown': np.nan,
+                    'Final Value': np.nan,
+                    'Total Costs': np.nan
+                })
+                continue
+
             # Calculate metrics
             total_return = results['total_return']
             annual_return = (1 + total_return) ** (252 / len(portfolio_returns)) - 1
