@@ -91,7 +91,7 @@ class DataFetcher:
                 print(f"  {ticker}: {pct:.2f}% missing")
         
         # Forward fill then backward fill
-        prices = prices.fillna(method='ffill').fillna(method='bfill')
+        prices = prices.ffill().bfill()
         
         # Drop columns with all NaN
         prices = prices.dropna(axis=1, how='all')
@@ -174,7 +174,7 @@ class DataFetcher:
                     forex_rate = forex_data
                 
                 # Reindex to match asset dates and forward fill missing forex rates
-                forex_rate = forex_rate.reindex(prices.index, method='ffill')
+                forex_rate = forex_rate.reindex(prices.index).ffill()
                 
                 # Convert to USD
                 converted_prices[ticker] = prices[ticker] * forex_rate
