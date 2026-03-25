@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import numpy as np
+import os
 import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
@@ -25,6 +26,10 @@ class PortfolioVisualizer:
     def __init__(self, save_plots: bool = False, output_dir: str = 'output/'):
         self.save_plots = save_plots
         self.output_dir = output_dir
+        
+        # Ensure output directory exists for saving plots
+        if self.save_plots and not os.path.exists(self.output_dir):
+            os.makedirs(self.output_dir, exist_ok=True)
         
     def plot_weights_over_time(self, weights_history: pd.DataFrame,
                                title: str = "Portfolio Weights Over Time"):
