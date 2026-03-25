@@ -21,21 +21,27 @@ def sanitize_df(df):
             df[col] = df[col].astype(str)
     return df
 
-# --- AGGRESSIVE QUANTSTATS / PANDAS 2.x PATCH ---
+# --- AGGRESSIVE QUANTSTATS / PANDAS PATCH ---
 try:
     import pandas as pd
     import quantstats as qs
-    # Patch the failing gain_to_pain_ratio in quantstats directly
-    # This prevents the 'ValueError: to_offset(freq)' caused by 'ME' vs 'M'
+    # Patch 1: Fixing gain_to_pain_ratio 'ME' vs 'M'
     if hasattr(qs.stats, 'gain_to_pain_ratio'):
         original_gp = qs.stats.gain_to_pain_ratio
         def patched_gp(returns, rf=0, resolution="M"):
-            try:
-                # Force 'M' which is most stable across Pandas 1.x and 2.x
-                return original_gp(returns, rf, "M")
-            except:
-                return original_gp(returns, rf, resolution)
+            try: return original_gp(returns, rf, "M")
+            except: return original_gp(returns, rf, resolution)
         qs.stats.gain_to_pain_ratio = patched_gp
+    
+    # Patch 2: Fixing 'YE' (Year End) alias which fails in some Pandas versions
+    import quantstats._compat as qs_compat
+    if hasattr(qs_compat, 'get_frequency_alias'):
+        original_alias = qs_compat.get_frequency_alias
+        def patched_alias(freq):
+            alias = original_alias(freq)
+            # Map modern aliases back to legacy for total stability
+            return {"YE": "Y", "ME": "M", "A": "Y"}.get(alias, alias)
+        qs_compat.get_frequency_alias = patched_alias
 except Exception:
     pass
 
