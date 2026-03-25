@@ -18,7 +18,7 @@ pip install git+https://github.com/robertmartin8/PyPortfolioOpt.git
 
 ### Step 3:
 ```bash
-python main.py
+python -m streamlit run app.py
 ```
 
 ### Configuration
