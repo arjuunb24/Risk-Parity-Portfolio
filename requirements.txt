@@ -1,5 +1,5 @@
 # Core numerical computing
-numpy
+numpy<2.0.0
 pandas<2.2.0
 
 # Data acquisition
@@ -29,3 +29,6 @@ arch
 
 # Web UI
 streamlit>=1.31.0
+
+# Serialization
+pyarrow<15.0.0
