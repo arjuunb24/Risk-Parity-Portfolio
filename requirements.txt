@@ -13,6 +13,7 @@ cvxpy
 matplotlib
 seaborn
 plotly
+altair<5
 
 # Performance analytics
 quantstats
