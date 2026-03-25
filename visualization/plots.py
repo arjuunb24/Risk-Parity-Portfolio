@@ -226,6 +226,30 @@ class PortfolioVisualizer:
         
         plt.show()
     
+    def plot_return_distribution(self, strategies_results: Dict[str, Dict],
+                                title: str = "Return Distribution"):
+        """Plot histogram of returns for multiple strategies"""
+        fig, ax = plt.subplots(figsize=(14, 8))
+        
+        for name, results in strategies_results.items():
+            returns = results['portfolio_returns']['return'] * 100
+            
+            sns.histplot(returns, label=name, kde=True, bins=50, alpha=0.5, ax=ax)
+            
+        ax.set_title(title, fontsize=16, fontweight='bold')
+        ax.set_xlabel('Return (%)', fontsize=12)
+        ax.set_ylabel('Frequency', fontsize=12)
+        ax.legend(loc='best', fontsize=11)
+        ax.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        
+        if self.save_plots:
+            plt.savefig(f'{self.output_dir}return_distribution.png', dpi=300, bbox_inches='tight')
+            
+        plt.close(fig)  # Ensure figure is closed so it doesn't pop up
+        # We should probably close all figures if we are running in streamlit. But wait, we can just do plt.close(fig) to avoid popups.
+
     def plot_geographic_exposure(self, geographic_exposure: pd.DataFrame,
                                 title: str = "Geographic Exposure"):
         """Plot geographic distribution as pie chart"""

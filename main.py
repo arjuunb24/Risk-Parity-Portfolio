@@ -23,7 +23,7 @@ from performance.geographic_analysis import GeographicAnalyzer
 from visualization.plots import PortfolioVisualizer
 import webbrowser
 
-def main():
+def main(run_streamlit=False):
     """Main execution function"""
     
     print("="*80)
@@ -300,6 +300,13 @@ def main():
         title="Final Portfolio Weight Distribution"
     )
     
+    # 7b. Return Distribution
+    print("Generating return distribution plot...")
+    visualizer.plot_return_distribution(
+        strategies,
+        title="Return Distribution"
+    )
+    
     # 8. Interactive Dashboard
     if GENERATE_HTML_REPORT:
         print("Generating interactive dashboard...")
@@ -308,7 +315,8 @@ def main():
             rp_results['weights_history'],
             risk_decomp
         )
-        webbrowser.open('file://' + os.path.realpath(f'{OUTPUT_DIR}interactive_dashboard.html'))
+        if not run_streamlit:
+            webbrowser.open('file://' + os.path.realpath(f'{OUTPUT_DIR}interactive_dashboard.html'))
     
     # ========================================================================
     # STEP 10: QUANTSTATS REPORT (Optional)
@@ -331,7 +339,8 @@ def main():
             title='Risk Parity Portfolio'
         )
         print(f"Report saved to {OUTPUT_DIR}quantstats_report.html")
-        webbrowser.open('file://' + os.path.realpath(f'{OUTPUT_DIR}quantstats_report.html'))
+        if not run_streamlit:
+            webbrowser.open('file://' + os.path.realpath(f'{OUTPUT_DIR}quantstats_report.html'))
         
     except ImportError:
         print("\nQuantStats not installed. Skipping detailed report generation.")
@@ -360,7 +369,19 @@ def main():
         'ew_results': ew_results,
         'benchmark_results': benchmark_results,
         'weights_schedule': weights_schedule,
-        'comparison': comparison
+        'comparison': comparison,
+        'asset_stats': asset_stats,
+        'valid_tickers': valid_tickers,
+        'data_summary': summary,
+        'inv_vol_weights': inv_vol_weights,
+        'optimal_weights': optimal_weights,
+        'portfolio_ret': portfolio_ret,
+        'portfolio_vol': portfolio_vol,
+        'risk_decomp': risk_decomp,
+        'is_rp': is_rp,
+        'deviations': deviations,
+        'div_ratio': RiskModels.diversification_ratio(optimal_weights, returns, cov_matrix),
+        'weight_stability': stability
     }
 
 

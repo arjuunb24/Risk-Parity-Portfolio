@@ -18,36 +18,56 @@ ASSETS = {
     'NVDA': 'NVIDIA',
     'JPM': 'JPMorgan Chase',
     'JNJ': 'Johnson & Johnson',
-    'XOM': 'Exxon Mobil'  
-}
-
-# Market-specific suffixes for Yahoo Finance
-# These are automatically handled by yFinance, but good to document:
-MARKET_SUFFIXES = {
-    'US': '',           # No suffix (AAPL, MSFT)
-    'London': '.L',     # London Stock Exchange (BP.L)
-    'Paris': '.PA',     # Euronext Paris (MC.PA)
-    'Germany': '.DE',   # XETRA (SAP.DE)
-    'Tokyo': '.T',      # Tokyo Stock Exchange (7203.T)
-    'Hong Kong': '.HK', # Hong Kong Exchange (0700.HK)
-    'India NSE': '.NS', # National Stock Exchange India (RELIANCE.NS)
-    'India BSE': '.BO', # Bombay Stock Exchange (RELIANCE.BO)
-    'Australia': '.AX', # Australian Securities Exchange (BHP.AX)
-    'Canada': '.TO',    # Toronto Stock Exchange (RY.TO)
-}
-
-# Asset categorization for analysis
-ASSET_CATEGORIES = {
-    'US_Equities': ['SPY', 'QQQ', 'IWM', 'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'JPM', 'JNJ', 'XOM'],
-    'European_Equities': ['BP.L', 'HSBA.L', 'SHEL.L', 'VOD.L', 'MC.PA', 'OR.PA', 'SAN.PA', 'SAP.DE', 'SIE.DE', 'VOW3.DE'],
-    'Asian_Equities': ['7203.T', '6758.T', '9984.T', '0700.HK', '9988.HK', '0941.HK', 'RELIANCE.NS', 'TCS.NS', 'INFY.NS'],
-    'Pacific_Equities': ['BHP.AX', 'CBA.AX', 'CSL.AX'],
-    'Canadian_Equities': ['RY.TO', 'TD.TO', 'SHOP.TO'],
-    'International_ETFs': ['EFA', 'EEM', 'FXI'],
-    'Fixed_Income': ['TLT', 'IEF', 'LQD', 'HYG', 'EMB'],
-    'Commodities': ['GLD', 'SLV', 'USO', 'DBC'],
-    'Crypto': ['BTC-USD', 'ETH-USD'],
-    'Real_Estate': ['VNQ', 'VNQI']
+    'XOM': 'Exxon Mobil',
+    
+    # --- ADDITIONAL US STOCKS - to test out different combinations of assets ---
+    # -- TECHNOLOGY --
+    # 'TSLA': 'Tesla',
+    # 'META': 'Meta Platforms',
+    # 'AVGO': 'Broadcom',
+    # 'ORCL': 'Oracle',
+    # 'ADBE': 'Adobe',
+    # 'CRM': 'Salesforce',
+    # 'AMD': 'AMD',
+    # 'CSCO': 'Cisco Systems',
+    # 'INTC': 'Intel',
+    # 'QCOM': 'Qualcomm',
+    
+    # -- FINANCIALS --
+    # 'BAC': 'Bank of America',
+    # 'V': 'Visa',
+    # 'MA': 'Mastercard',
+    # 'WFC': 'Wells Fargo',
+    # 'MS': 'Morgan Stanley',
+    # 'GS': 'Goldman Sachs',
+    # 'SCHW': 'Charles Schwab',
+    # 'BLK': 'BlackRock',
+    # 'C': 'Citigroup',
+    # 'AXP': 'American Express',
+    
+    # -- HEALTHCARE --
+    # 'UNH': 'UnitedHealth Group',
+    # 'LLY': 'Eli Lilly',
+    # 'PFE': 'Pfizer',
+    # 'ABBV': 'AbbVie',
+    # 'MRK': 'Merck',
+    # 'TMO': 'Thermo Fisher',
+    # 'DHR': 'Danaher',
+    # 'AMGN': 'Amgen',
+    # 'ISRG': 'Intuitive Surgical',
+    # 'GILD': 'Gilead Sciences',
+    
+    # -- CONSUMER / RETAIL --
+    # 'WMT': 'Walmart',
+    # 'COST': 'Costco',
+    # 'HD': 'Home Depot',
+    # 'PG': 'Procter & Gamble',
+    # 'KO': 'Coca-Cola',
+    # 'PEP': 'PepsiCo',
+    # 'MCD': 'McDonalds',
+    # 'NKE': 'Nike',
+    # 'DIS': 'Disney',
+    # 'SBUX': 'Starbucks'
 }
 
 # Backtesting Parameters
