@@ -40,7 +40,7 @@ try:
         def patched_alias(freq):
             alias = original_alias(freq)
             # Map modern aliases back to legacy for total stability
-            return {"YE": "Y", "ME": "M", "A": "Y"}.get(alias, alias)
+            return {"YE": "Y", "ME": "M", "QE": "Q", "A": "Y"}.get(alias, alias)
         qs_compat.get_frequency_alias = patched_alias
 except Exception:
     pass
