@@ -1,6 +1,6 @@
 # Core numerical computing
 numpy
-pandas
+pandas<2.2.0
 
 # Data acquisition
 yfinance
@@ -28,4 +28,4 @@ statsmodels
 arch
 
 # Web UI
-streamlit
+streamlit>=1.31.0

@@ -19,6 +19,10 @@ warnings.filterwarnings('ignore')
 sns.set_style("whitegrid")
 plt.rcParams['figure.figsize'] = (14, 8)
 
+# Set global font for Linux compatibility (avoids Arial not found errors)
+plt.rcParams['font.family'] = 'DejaVu Sans'
+plt.rcParams['axes.unicode_minus'] = False
+
 
 class PortfolioVisualizer:
     """Create visualizations for portfolio analysis"""
