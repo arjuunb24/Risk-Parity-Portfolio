@@ -42,7 +42,7 @@ if st.session_state.get('selected_image'):
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     _, btn_col, _ = st.columns([2, 1, 2])
     with btn_col:
-        if st.button("⬅️ Back to Portfolio Visualizations", type="primary", width='stretch'):
+        if st.button("⬅️ Back to Portfolio Visualizations", type="primary", use_container_width=True):
             st.session_state['selected_image'] = None
             st.rerun()
     st.stop()
@@ -129,21 +129,21 @@ if st.session_state.results is not None:
     st.markdown("<h2 class='section-header'>Data Acquisition & Preprocessing</h2>", unsafe_allow_html=True)
     st.text(f"Data Summary:\n  Assets: {data_summary.get('n_assets')}\n  Date Range: {data_summary.get('start_date')} to {data_summary.get('end_date')}\n  Trading Days: {data_summary.get('n_periods')}")
     st.text("Asset Statistics:")
-    st.dataframe(asset_stats, width='stretch')
+    st.dataframe(asset_stats, use_container_width=True)
     
     # Step 3: Initial Weights
     st.markdown("<h2 class='section-header'>Initial Portfolio Weighting</h2>", unsafe_allow_html=True)
     st.text("Inverse Volatility Weights:")
     inv_weights = results.get('inv_vol_weights')
     if inv_weights is not None:
-        st.dataframe(pd.DataFrame(inv_weights).T, width='stretch')
+        st.dataframe(pd.DataFrame(inv_weights).T, use_container_width=True)
         
     # Step 4: Optimization
     st.markdown("<h2 class='section-header'>Risk Parity Optimization</h2>", unsafe_allow_html=True)
     opt_weights = results.get('optimal_weights')
     if opt_weights is not None:
         st.text("Optimal Risk Parity Weights:")
-        st.dataframe(pd.DataFrame(opt_weights).T, width='stretch')
+        st.dataframe(pd.DataFrame(opt_weights).T, use_container_width=True)
         
     pref = results.get('portfolio_ret', 0) * 100
     pvol = results.get('portfolio_vol', 0) * 100
@@ -155,7 +155,7 @@ if st.session_state.results is not None:
     risk_decomp_df = results.get('risk_decomp')
     if risk_decomp_df is not None:
         st.text("Risk Decomposition Analysis:")
-        st.dataframe(risk_decomp_df, width='stretch')
+        st.dataframe(risk_decomp_df, use_container_width=True)
         
     devs = results.get('deviations', pd.Series([0])).max()
     st.text(f"Portfolio Volatility: {results.get('portfolio_vol', 0):.4f} ({pvol:.2f}%)\nRisk Parity Achieved: {results.get('is_rp', 'Unknown')}\nMax Deviation from Equal Risk: {devs:.2f}%\nDiversification Ratio: {results.get('div_ratio', 0):.4f}")
@@ -166,7 +166,7 @@ if st.session_state.results is not None:
     if len(rebalance_dates) > 0:
         st.text(f"Rebalancing Schedule:\n  Total Rebalances: {len(rebalance_dates)}\n  First Rebalance: {rebalance_dates[0]}\n  Last Rebalance: {rebalance_dates[-1]}")
     st.text("Weight Stability Analysis:")
-    st.dataframe(results.get('weight_stability'), width='stretch')
+    st.dataframe(results.get('weight_stability'), use_container_width=True)
     
     # Step 7 & 8: Performance & Comparison
     st.markdown("<h2 class='section-header'>Performance Evaluation</h2>", unsafe_allow_html=True)
@@ -189,11 +189,11 @@ if st.session_state.results is not None:
             initial_capital=INITIAL_CAPITAL,
             risk_free_rate=RISK_FREE_RATE
         )
-        st.dataframe(report, width='stretch')
+        st.dataframe(report, use_container_width=True)
     
     st.markdown("<h2 class='section-header'>Strategy Comparison</h2>", unsafe_allow_html=True)
     st.text(f"Initial Capital: ${INITIAL_CAPITAL:,.2f}")
-    st.dataframe(comparison.round(4), width='stretch')
+    st.dataframe(comparison.round(4), use_container_width=True)
     
     st.text(f"\nFinal Results:\n  Risk Parity Total Return: {rp_results.get('total_return', 0)*100:.2f}%\n  Equal Weight Total Return: {ew_results.get('total_return', 0)*100:.2f}%")
     if benchmark_results_data:
@@ -233,7 +233,7 @@ if st.session_state.results is not None:
         <div style="text-align: center; color: #a0a0a0; font-size: 14px; margin-top: 4px;">{caption}</div>
         ''', unsafe_allow_html=True)
         # Invisible Streamlit button overlaid below image to capture click
-        if col.button(f"\U0001f50d View: {caption}", key=img_filename, width='stretch'):
+        if col.button(f"\U0001f50d View: {caption}", key=img_filename, use_container_width=True):
             st.session_state['selected_image'] = img_filename
             st.rerun()
     
