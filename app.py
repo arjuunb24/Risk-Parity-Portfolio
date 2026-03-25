@@ -21,6 +21,18 @@ def sanitize_df(df):
             df[col] = df[col].astype(str)
     return df
 
+# --- QUANTSTATS COMPATIBILITY PATCH (for Pandas 2.x) ---
+try:
+    import pandas as pd
+    # Force 'M' to be interpreted correctly or handle the resample freq change.
+    # This specifically fixes the ValueError: to_offset(freq) in QuantStats.
+    if pd.__version__ >= "2.0.0":
+        import pandas.tseries.offsets as offsets
+        if not hasattr(offsets, 'M'):
+            offsets.M = offsets.MonthEnd
+except Exception:
+    pass
+
 # Page configuration
 st.set_page_config(
     page_title="Risk Parity Portfolio",
