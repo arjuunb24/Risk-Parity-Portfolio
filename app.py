@@ -21,15 +21,21 @@ def sanitize_df(df):
             df[col] = df[col].astype(str)
     return df
 
-# --- QUANTSTATS COMPATIBILITY PATCH (for Pandas 2.x) ---
+# --- AGGRESSIVE QUANTSTATS / PANDAS 2.x PATCH ---
 try:
     import pandas as pd
-    # Force 'M' to be interpreted correctly or handle the resample freq change.
-    # This specifically fixes the ValueError: to_offset(freq) in QuantStats.
-    if pd.__version__ >= "2.0.0":
-        import pandas.tseries.offsets as offsets
-        if not hasattr(offsets, 'M'):
-            offsets.M = offsets.MonthEnd
+    import quantstats as qs
+    # Patch the failing gain_to_pain_ratio in quantstats directly
+    # This prevents the 'ValueError: to_offset(freq)' caused by 'ME' vs 'M'
+    if hasattr(qs.stats, 'gain_to_pain_ratio'):
+        original_gp = qs.stats.gain_to_pain_ratio
+        def patched_gp(returns, rf=0, resolution="M"):
+            try:
+                # Force 'M' which is most stable across Pandas 1.x and 2.x
+                return original_gp(returns, rf, "M")
+            except:
+                return original_gp(returns, rf, resolution)
+        qs.stats.gain_to_pain_ratio = patched_gp
 except Exception:
     pass
 
