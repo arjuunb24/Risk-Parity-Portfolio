@@ -308,31 +308,39 @@ if st.session_state.results is not None:
                     background-color: #0e1117 !important;
                     color: #fafafa !important;
                 }
-                /* Only target text color - do NOT modify layout/width/display of elements */
                 div, span, p, h1, h2, h3, h4, h5, h6, th, td, li, a {
                     color: #fafafa !important;
                 }
-                /* Scale images slightly smaller but keep inline so side-by-side works */
+                /* Force Side-by-Side layout for Summary Section */
+                .row, .summaries { 
+                    display: flex !important; 
+                    flex-direction: row !important;
+                    flex-wrap: wrap !important;
+                    align-items: flex-start !important;
+                    justify-content: flex-start !important;
+                    width: 100% !important;
+                }
+                .col-md-8, .col-md-7 { 
+                    flex: 1 1 55% !important;
+                    max-width: 60% !important;
+                }
+                .col-md-4, .col-md-5 { 
+                    flex: 1 1 35% !important;
+                    max-width: 40% !important;
+                }
                 img {
-                    max-width: 90% !important;
+                    max-width: 100% !important;
                     height: auto !important;
                     background-color: #f0f0f0;
                     padding: 6px;
                     border-radius: 6px;
                 }
-                /* Fix table cell backgrounds without touching widths or layout */
                 table {
                     background-color: #1e2030 !important;
+                    width: 100% !important;
                 }
-                th {
-                    background-color: #1e1e1e !important;
-                    color: #00d4ff !important;
-                    padding: 10px;
-                }
-                td {
-                    padding: 10px;
-                    border-bottom: 1px solid #444 !important;
-                }
+                th { background-color: #1e1e1e !important; color: #00d4ff !important; padding: 10px; }
+                td { padding: 8px; border-bottom: 1px solid #444 !important; }
             </style>
             """
             if "</head>" in html_content:
