@@ -4,6 +4,23 @@ import pandas as pd
 from main import main
 from config import OUTPUT_DIR, INITIAL_CAPITAL
 
+# --- COMPATIBILITY HELPERS ---
+def st_rerun():
+    """Fallback for older Streamlit versions that use experimental_rerun."""
+    if hasattr(st, "rerun"):
+        st.rerun()
+    else:
+        st.experimental_rerun()
+
+def sanitize_df(df):
+    """Fix 'LargeUtf8' error by casting object columns to standard strings."""
+    if df is None: return None
+    df = df.copy()
+    for col in df.columns:
+        if df[col].dtype == 'object':
+            df[col] = df[col].astype(str)
+    return df
+
 # Page configuration
 st.set_page_config(
     page_title="Risk Parity Portfolio",
@@ -44,7 +61,7 @@ if st.session_state.get('selected_image'):
     with btn_col:
         if st.button("⬅️ Back to Portfolio Visualizations", type="primary", use_container_width=True):
             st.session_state['selected_image'] = None
-            st.rerun()
+            st_rerun()
     st.stop()
 
 
@@ -129,21 +146,21 @@ if st.session_state.results is not None:
     st.markdown("<h2 class='section-header'>Data Acquisition & Preprocessing</h2>", unsafe_allow_html=True)
     st.text(f"Data Summary:\n  Assets: {data_summary.get('n_assets')}\n  Date Range: {data_summary.get('start_date')} to {data_summary.get('end_date')}\n  Trading Days: {data_summary.get('n_periods')}")
     st.text("Asset Statistics:")
-    st.dataframe(asset_stats, use_container_width=True)
+    st.dataframe(sanitize_df(asset_stats), use_container_width=True)
     
     # Step 3: Initial Weights
     st.markdown("<h2 class='section-header'>Initial Portfolio Weighting</h2>", unsafe_allow_html=True)
     st.text("Inverse Volatility Weights:")
     inv_weights = results.get('inv_vol_weights')
     if inv_weights is not None:
-        st.dataframe(pd.DataFrame(inv_weights).T, use_container_width=True)
+        st.dataframe(sanitize_df(pd.DataFrame(inv_weights).T), use_container_width=True)
         
     # Step 4: Optimization
     st.markdown("<h2 class='section-header'>Risk Parity Optimization</h2>", unsafe_allow_html=True)
     opt_weights = results.get('optimal_weights')
     if opt_weights is not None:
         st.text("Optimal Risk Parity Weights:")
-        st.dataframe(pd.DataFrame(opt_weights).T, use_container_width=True)
+        st.dataframe(sanitize_df(pd.DataFrame(opt_weights).T), use_container_width=True)
         
     pref = results.get('portfolio_ret', 0) * 100
     pvol = results.get('portfolio_vol', 0) * 100
@@ -155,7 +172,7 @@ if st.session_state.results is not None:
     risk_decomp_df = results.get('risk_decomp')
     if risk_decomp_df is not None:
         st.text("Risk Decomposition Analysis:")
-        st.dataframe(risk_decomp_df, use_container_width=True)
+        st.dataframe(sanitize_df(risk_decomp_df), use_container_width=True)
         
     devs = results.get('deviations', pd.Series([0])).max()
     st.text(f"Portfolio Volatility: {results.get('portfolio_vol', 0):.4f} ({pvol:.2f}%)\nRisk Parity Achieved: {results.get('is_rp', 'Unknown')}\nMax Deviation from Equal Risk: {devs:.2f}%\nDiversification Ratio: {results.get('div_ratio', 0):.4f}")
@@ -166,7 +183,7 @@ if st.session_state.results is not None:
     if len(rebalance_dates) > 0:
         st.text(f"Rebalancing Schedule:\n  Total Rebalances: {len(rebalance_dates)}\n  First Rebalance: {rebalance_dates[0]}\n  Last Rebalance: {rebalance_dates[-1]}")
     st.text("Weight Stability Analysis:")
-    st.dataframe(results.get('weight_stability'), use_container_width=True)
+    st.dataframe(sanitize_df(results.get('weight_stability')), use_container_width=True)
     
     # Step 7 & 8: Performance & Comparison
     st.markdown("<h2 class='section-header'>Performance Evaluation</h2>", unsafe_allow_html=True)
@@ -189,11 +206,11 @@ if st.session_state.results is not None:
             initial_capital=INITIAL_CAPITAL,
             risk_free_rate=RISK_FREE_RATE
         )
-        st.dataframe(report, use_container_width=True)
+        st.dataframe(sanitize_df(report), use_container_width=True)
     
     st.markdown("<h2 class='section-header'>Strategy Comparison</h2>", unsafe_allow_html=True)
     st.text(f"Initial Capital: ${INITIAL_CAPITAL:,.2f}")
-    st.dataframe(comparison.round(4), use_container_width=True)
+    st.dataframe(sanitize_df(comparison.round(4)), use_container_width=True)
     
     st.text(f"\nFinal Results:\n  Risk Parity Total Return: {rp_results.get('total_return', 0)*100:.2f}%\n  Equal Weight Total Return: {ew_results.get('total_return', 0)*100:.2f}%")
     if benchmark_results_data:
@@ -235,7 +252,7 @@ if st.session_state.results is not None:
         # Invisible Streamlit button overlaid below image to capture click
         if col.button(f"\U0001f50d View: {caption}", key=img_filename, use_container_width=True):
             st.session_state['selected_image'] = img_filename
-            st.rerun()
+            st_rerun()
     
     for i in range(0, len(image_files), 2):
         icol1, icol2 = st.columns(2)
